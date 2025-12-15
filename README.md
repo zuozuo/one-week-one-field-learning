@@ -1,2 +1,82 @@
-# one-week-one-field-learning
-一个持续学习的实验项目。每周选择一个完全陌生的领域，用1-2小时快速建立基础认知，然后记录整个学习过程和成果。
+# 一周一领域学习计划
+
+一个持续学习的实验项目。每周选择一个完全陌生的领域，快速建立基础认知，记录整个学习过程和成果。
+
+---
+
+## 📖 项目理念
+
+**核心方法论**：
+> 终局定方向，流程搭骨架，单点打通关，类比挂认知，闭环验真知。
+
+1. **终局锚定**：先明确学完要达到什么目标
+2. **流程串联**：建立全局视角，理解整体框架
+3. **单点突破**：选择关键概念深入学习
+4. **类比迁移**：用熟悉的事物理解陌生概念
+5. **闭环验证**：通过实践和教学检验学习效果
+
+---
+
+## 🗂️ 学习记录
+
+### Week 01：加密货币与区块链
+
+本周系统学习了加密货币和区块链生态的核心知识，涵盖以下主题：
+
+| 主题 | 说明 | 入口 |
+|------|------|------|
+| 🔗 **以太坊** | 智能合约平台基础：账户、交易、Gas、EVM | [查看](fields/week-01-crypto/ethereum/README.md) |
+| 💰 **DeFi** | 去中心化金融：DEX、借贷、流动性池、收益耕作 | [查看](fields/week-01-crypto/defi/README.md) |
+| 🌐 **Web3** | Web3 核心概念：钱包、交易、共识、DApp | [查看](fields/week-01-crypto/web3/README.md) |
+| 📜 **智能合约与共识** | Solidity 基础、共识算法、PoW vs PoS | [查看](fields/week-01-crypto/smart-contracts-consensus/README.md) |
+| ⚡ **Solana** | 高性能区块链：账户模型、PoH、SPL Token | [查看](fields/week-01-crypto/solana-blockchain/README.md) |
+| 🏛️ **DAO** | 去中心化自治组织：治理代币、提案投票、多签 | [查看](fields/week-01-crypto/dao-decentralized-organization/README.md) |
+| 🎨 **NFT** | 非同质化代币：ERC-721、元数据、IPFS | [查看](fields/week-01-crypto/nft/README.md) |
+| 💵 **稳定币** | 法币锚定机制：USDT、DAI、算法稳定币 | [查看](fields/week-01-crypto/stablecoin/README.md) |
+| 🔐 **零知识证明** | ZKP 原理：zk-SNARKs、zk-STARKs、Circom | [查看](fields/week-01-crypto/zero-knowledge-proof/README.md) |
+| 🔑 **密码学** | 加密基础：对称/非对称加密、哈希、数字签名 | [查看](fields/week-01-crypto/cryptography/README.md) |
+
+---
+
+## 📚 文档结构
+
+```
+fields/
+└── week-XX-topic/           # 每周学习主题
+    └── subtopic/            # 子主题
+        ├── README.md        # 学习框架：目标、流程、概念导航
+        └── tutorials/       # 详细教程
+            ├── 01-xxx.md    # 概念讲解
+            ├── 02-xxx.md
+            └── case-study.md # 实战案例
+```
+
+每个主题的 README 包含：
+- **终极目标**：要解决什么问题、达到什么水平
+- **流程全景图**：核心流程的可视化展示
+- **概念导航**：按学习顺序排列的核心概念
+- **类比速查表**：用熟悉事物解释新概念
+- **学习自检清单**：费曼检验、迁移检验、深度检验
+
+---
+
+## 🎯 学习检验方法
+
+- **费曼检验**：能否用简单的话向外行解释清楚？
+- **迁移检验**：换一个类似的场景，能否独立完成？
+- **深度检验**：能否解释背后的原理和权衡？
+
+---
+
+## 🚀 如何使用
+
+1. 选择感兴趣的主题，阅读对应的 `README.md`
+2. 按照推荐顺序学习 `tutorials/` 下的教程
+3. 完成 `case-study.md` 中的实战练习
+4. 用自检清单验证学习效果
+
+---
+
+## 📝 License
+
+MIT
