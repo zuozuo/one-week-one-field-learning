@@ -36,132 +36,61 @@ allowed-tools: Bash, Read, Write, Skill, Glob, Git
 
 在调用 skill 之前，先告诉用户你创建的目录名称。
 
-## 步骤 5: 多 AI 专家 Review
+## 步骤 5: 多 AI 专家 Review 与优化
 
-教程生成完成后，启动多个 AI 工具并行 review 教程质量。
+教程生成完成后，使用 `scripts/ai_review.py` 脚本进行多 AI 并行 review 和优化。
 
-### 5.1 创建 reviews 目录
-```bash
-mkdir -p fields/{week-XX-主题名}/reviews
-```
+### 5.1 运行 AI Review 脚本
 
-### 5.2 构建 Review Prompt
-构建以下 prompt（将 `{Topic}` 和 `{目录路径}` 替换为实际值）：
-
-```
-你是 {Topic} 领域的顶级专家。
-
-{目录路径} 里面是我们写的让小白用户学习 {Topic} 的教程。
-
-请用你专业的眼光 review 这个教程，重点关注：
-1. 知识体系的完整性 - 是否覆盖了该领域的核心概念？有没有遗漏重要内容？
-2. 小白用户的学习上手容易程度 - 解释是否通俗易懂？例子是否贴切？学习曲线是否合理？
-3. 内容的准确性 - 有没有错误或不准确的地方？
-
-请把你发现的问题和改进建议总结成一份 review 报告，写到 {目录路径}/reviews/ 目录下。
-```
-
-### 5.3 并行启动 AI Review（后台运行）
-
-**重要：在一个命令中同时启动三个 AI，确保并行执行：**
+执行以下命令（将变量替换为实际值）：
 
 ```bash
-# 设置代理并并行启动三个 AI CLI 工具
-export https_proxy=http://127.0.0.1:10080 && \
-export http_proxy=http://127.0.0.1:10080 && \
-export all_proxy=socks5://127.0.0.1:10081 && \
-claude -p "{review_prompt}" --allowedTools "Read,Write,Bash" > /dev/null 2>&1 & \
-codex -p "{review_prompt}" --allowedTools "Read,Write,Bash" > /dev/null 2>&1 & \
-gemini -p "{review_prompt}" > /dev/null 2>&1 &
+python scripts/ai_review.py \
+    --topic "{中文主题名}" \
+    --content-path "$(pwd)/fields/{week-XX-主题名}" \
+    --output-path "$(pwd)/fields/{week-XX-主题名}/reviews"
 ```
 
-输出文件：
-- Claude Code → `reviews/review-claude.md`
-- Codex → `reviews/review-codex.md`
-- Gemini CLI → `reviews/review-gemini.md`
+**脚本功能**：
+1. 设置代理环境变量
+2. 并行调用 Claude Code / Codex / Gemini CLI 进行 review
+3. 等待三个 AI 完成 review
+4. 自动调用 Claude Code 汇总 review 意见
+5. 根据汇总意见优化教程内容
 
-### 5.4 等待 Review 完成
-等待三个 AI CLI 工具完成 review。可以通过以下方式检查：
+**输出文件**：
+- `reviews/review-claude.md` - Claude 的 review
+- `reviews/review-codex.md` - Codex 的 review
+- `reviews/review-gemini.md` - Gemini 的 review
+- `reviews/summary.md` - 汇总的意见
+- `reviews/optimization-report.md` - 优化报告
 
-```bash
-# 等待后台进程完成（最多等待 10 分钟）
-wait
-```
+### 5.2 检查结果
 
-或者轮询检查 reviews 目录下是否有三个文件生成：
-```bash
-# 检查文件是否都已生成
-while [ $(ls -1 {目录路径}/reviews/*.md 2>/dev/null | wc -l) -lt 3 ]; do
-    echo "等待 AI review 完成..."
-    sleep 30
-done
-```
+脚本执行完成后，检查 `reviews/` 目录下的文件：
+- 确认 review 文件已生成
+- 查看 `summary.md` 了解主要问题
+- 查看 `optimization-report.md` 了解优化内容
 
-### 5.5 告知用户
+### 5.3 告知用户
+
 告诉用户：
-- "三个 AI 正在并行 review 教程，请稍候..."
-- "Review 完成后将自动汇总意见并优化教程"
+- Review 和优化的执行结果
+- 如果有失败的 AI 工具，说明原因
+- 优化后的教程结构变化
 
-## 步骤 6: 汇总 Review 意见并优化教程
-
-### 6.1 读取所有 Review 文件
-读取 `{目录路径}/reviews/` 目录下所有的 review 文件：
-- `review-claude.md`
-- `review-codex.md`
-- `review-gemini.md`
-
-### 6.2 汇总意见
-将三个 AI 的 review 意见进行汇总整理：
-- 找出共同提到的问题（多个 AI 都提到的问题优先级更高）
-- 整理出具体的改进建议
-- 将汇总结果写入 `{目录路径}/reviews/summary.md`
-
-汇总格式：
-```markdown
-# Review 意见汇总
-
-## 高优先级问题（多个 AI 都提到）
-- ...
-
-## Claude 专家意见
-- ...
-
-## Codex 专家意见
-- ...
-
-## Gemini 专家意见
-- ...
-
-## 待改进项清单
-- [ ] ...
-```
-
-### 6.3 根据 Review 意见优化教程
-根据汇总的 review 意见，逐一优化教程内容：
-
-1. **知识完整性问题**：补充遗漏的核心概念，在 tutorials/ 目录下添加新文件或更新现有文件
-2. **易懂性问题**：优化解释方式，增加更贴切的类比和例子
-3. **准确性问题**：修正错误或不准确的内容
-4. **更新 README.md**：如果添加了新的概念文件，同步更新目录的 README.md
-
-### 6.4 告知用户优化结果
-告诉用户：
-- 汇总了哪些主要问题
-- 做了哪些优化改进
-- 优化后的教程结构
-
-## 步骤 7: 更新项目 README
+## 步骤 6: 更新项目 README
 更新项目根目录的 `README.md` 文件：
 - 在文件中添加新创建的学习主题
 - 包含主题名称和目录链接
 - 保持与现有格式一致
 
-## 步骤 8: 提交代码
+## 步骤 7: 提交代码
 执行以下 Git 操作：
 1. `git add -A` - 添加所有新文件和优化后的内容
 2. `git commit -m "feat: 添加 {主题名称} 学习内容（含多 AI Review 优化）"` - 提交代码
 
-## 步骤 9: 推送代码
+## 步骤 8: 推送代码
 执行 `git push` 将代码推送到远程仓库。
 
 如果 push 失败（如没有设置远程仓库），告知用户失败原因，但不影响整体流程的完成。
