@@ -63,7 +63,14 @@ mkdir -p fields/{week-XX-主题名}/reviews
 
 ### 5.3 并行启动 AI Review（后台运行）
 
-同时启动以下三个 AI CLI 工具，让它们并行 review：
+首先设置代理环境变量：
+```bash
+export https_proxy=http://127.0.0.1:10080
+export http_proxy=http://127.0.0.1:10080
+export all_proxy=socks5://127.0.0.1:10081
+```
+
+然后同时启动以下三个 AI CLI 工具，让它们并行 review：
 
 **Claude Code:**
 ```bash
