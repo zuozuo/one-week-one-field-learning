@@ -1,6 +1,6 @@
 ---
 description: 创建新的学习主题目录并开始学习
-allowed-tools: Bash, Read, Write, Skill, Glob
+allowed-tools: Bash, Read, Write, Skill, Glob, Git
 ---
 
 用户想要学习的主题是: $ARGUMENTS
@@ -35,3 +35,19 @@ allowed-tools: Bash, Read, Write, Skill, Glob
 使用 `learn-new-domain` skill 在新创建的目录中开始学习这个主题。
 
 在调用 skill 之前，先告诉用户你创建的目录名称。
+
+## 步骤 5: 更新项目 README
+教程生成完成后，更新项目根目录的 `README.md` 文件：
+- 在文件中添加新创建的学习主题
+- 包含主题名称和目录链接
+- 保持与现有格式一致
+
+## 步骤 6: 提交代码
+执行以下 Git 操作：
+1. `git add -A` - 添加所有新文件
+2. `git commit -m "feat: 添加 {主题名称} 学习内容"` - 提交代码，commit message 中包含主题名称
+
+## 步骤 7: 推送代码
+执行 `git push` 将代码推送到远程仓库。
+
+如果 push 失败（如没有设置远程仓库），告知用户失败原因，但不影响整体流程的完成。
