@@ -63,32 +63,22 @@ mkdir -p fields/{week-XX-主题名}/reviews
 
 ### 5.3 并行启动 AI Review（后台运行）
 
-首先设置代理环境变量：
-```bash
-export https_proxy=http://127.0.0.1:10080
-export http_proxy=http://127.0.0.1:10080
-export all_proxy=socks5://127.0.0.1:10081
-```
+**重要：在一个命令中同时启动三个 AI，确保并行执行：**
 
-然后同时启动以下三个 AI CLI 工具，让它们并行 review：
-
-**Claude Code:**
 ```bash
-claude -p "{review_prompt}" --allowedTools "Read,Write,Bash" > /dev/null 2>&1 &
-```
-输出文件：`reviews/review-claude.md`
-
-**Codex:**
-```bash
-codex -p "{review_prompt}" --allowedTools "Read,Write,Bash" > /dev/null 2>&1 &
-```
-输出文件：`reviews/review-codex.md`
-
-**Gemini CLI:**
-```bash
+# 设置代理并并行启动三个 AI CLI 工具
+export https_proxy=http://127.0.0.1:10080 && \
+export http_proxy=http://127.0.0.1:10080 && \
+export all_proxy=socks5://127.0.0.1:10081 && \
+claude -p "{review_prompt}" --allowedTools "Read,Write,Bash" > /dev/null 2>&1 & \
+codex -p "{review_prompt}" --allowedTools "Read,Write,Bash" > /dev/null 2>&1 & \
 gemini -p "{review_prompt}" > /dev/null 2>&1 &
 ```
-输出文件：`reviews/review-gemini.md`
+
+输出文件：
+- Claude Code → `reviews/review-claude.md`
+- Codex → `reviews/review-codex.md`
+- Gemini CLI → `reviews/review-gemini.md`
 
 ### 5.4 告知用户
 告诉用户：
