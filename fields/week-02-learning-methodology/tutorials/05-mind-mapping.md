@@ -158,7 +158,7 @@
 | MindNode | Mac/iOS 美观 | 付费 |
 | Miro | 在线协作 | 免费版够用 |
 | draw.io | 免费、功能强 | 免费 |
-| Markdown | 文字版导图 | 免费 |
+| Markdown + 插件 | 用文字缩进表达层级，配合 Markmap 等插件可转为可视化导图 | 免费 |
 
 ## 实战练习
 

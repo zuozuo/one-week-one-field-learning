@@ -175,7 +175,7 @@ i-f-(-x->-n-e-x-t-)-{-...  ← 一个字符一个字符处理
 ```
 REST API 组块
 ├── HTTP 方法组块
-│   └── CRUD 对应：Create-POST, Read-GET, Update-PUT, Delete-DELETE
+│   └── CRUD 对应：增(Create)-POST, 查(Read)-GET, 改(Update)-PUT, 删(Delete)-DELETE
 │
 ├── 状态码组块
 │   ├── 2xx 成功系列

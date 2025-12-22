@@ -1,5 +1,54 @@
 # 案例实战：用学习方法体系 7 天入门一个新领域
 
+本案例以技术领域（Kubernetes）为例，展示学习方法的综合运用。如果你是非技术背景，可以跳到文末的"通用案例参考"，那里有学外语、考驾照等更贴近日常的例子。
+
+---
+
+## 环境准备（技术案例必读）
+
+在开始案例之前，如果你想跟着动手操作，需要先准备以下环境：
+
+### 1. 安装 Docker
+Kubernetes 需要容器运行环境，首先安装 Docker：
+- **Mac**：下载 [Docker Desktop](https://www.docker.com/products/docker-desktop/)，安装后启动
+- **Windows**：下载 [Docker Desktop](https://www.docker.com/products/docker-desktop/)，需开启 WSL2
+- **Linux**：`sudo apt-get install docker.io`（Ubuntu）或参考官方文档
+
+### 2. 安装 kubectl（K8s 命令行工具）
+- **Mac**：`brew install kubectl`
+- **Windows**：`choco install kubernetes-cli` 或下载 [官方二进制文件](https://kubernetes.io/docs/tasks/tools/)
+- **Linux**：`sudo snap install kubectl --classic`
+
+验证安装：
+```bash
+kubectl version --client
+# 预期输出类似：Client Version: v1.28.0
+```
+
+### 3. 安装本地 K8s 集群（推荐 minikube）
+- **安装 minikube**：参考 [官方安装指南](https://minikube.sigs.k8s.io/docs/start/)
+- **启动集群**：
+```bash
+minikube start
+# 预期输出：
+# 😄  minikube v1.32.0 on Darwin
+# ✨  Automatically selected the docker driver
+# 📌  Using Docker Desktop driver with root privileges
+# 🔥  Creating kubernetes in kubernetes cluster...
+# 🏄  Done! kubectl is now configured to use "minikube" cluster
+```
+
+验证集群运行：
+```bash
+kubectl cluster-info
+# 预期输出：
+# Kubernetes control plane is running at https://127.0.0.1:xxxx
+```
+
+> **提示**：如果上述准备步骤有困难，也可以仅阅读案例了解学习方法的运用，无需动手操作。
+
+---
+
 ## 案例背景
 
 小明是一名后端工程师，公司新项目需要用到 Kubernetes（K8s），但他完全不懂。领导说"给你一周时间，学会基本操作"。
@@ -129,12 +178,17 @@
 ```bash
 # 创建一个简单的 Pod
 kubectl run nginx --image=nginx
+# 预期输出：pod/nginx created
 
-# 查看 Pod 状态
+# 查看 Pod 状态（等待几秒让 Pod 启动）
 kubectl get pods
+# 预期输出：
+# NAME    READY   STATUS    RESTARTS   AGE
+# nginx   1/1     Running   0          30s
 
-# 进入 Pod 看看
+# 进入 Pod 看看（输入 exit 退出）
 kubectl exec -it nginx -- /bin/bash
+# 预期输出：root@nginx:/#（进入了 Pod 内部的命令行）
 ```
 
 **第5步：记录到闪卡**
@@ -211,14 +265,29 @@ spec:
 **第3步：部署 + 验证**
 
 ```bash
-# 部署
+# 部署（确保 deployment.yaml 和 service.yaml 在当前目录）
 kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
+# 预期输出：deployment.apps/my-app created
 
-# 验证
-kubectl get pods      # 看到 3 个 pod running
-kubectl get services  # 看到 service 的 NodePort
-curl localhost:30080  # 能访问到 nginx 页面！
+kubectl apply -f service.yaml
+# 预期输出：service/my-app-service created
+
+# 验证（等待约30秒让 Pod 启动完成）
+kubectl get pods
+# 预期输出：
+# NAME                      READY   STATUS    RESTARTS   AGE
+# my-app-5d7b8c9f6-abc12    1/1     Running   0          45s
+# my-app-5d7b8c9f6-def34    1/1     Running   0          45s
+# my-app-5d7b8c9f6-ghi56    1/1     Running   0          45s
+
+kubectl get services
+# 预期输出：
+# NAME             TYPE       CLUSTER-IP      PORT(S)        AGE
+# my-app-service   NodePort   10.96.xxx.xxx   80:30080/TCP   1m
+
+# 在 minikube 环境中访问服务
+minikube service my-app-service --url
+# 会输出一个 URL，在浏览器打开即可看到 nginx 欢迎页面
 ```
 
 ### 遇到问题怎么办
@@ -412,6 +481,49 @@ Day 7: 总结 + 教会别人
 - [ ] **费曼检验**：我能向别人讲清楚这个 7 天学习法吗？
 - [ ] **迁移检验**：我能用这个方法规划一个新领域的学习吗？
 - [ ] **深度检验**：我能说出每种学习方法在什么时候用最合适吗？
+
+---
+
+## 通用案例参考（非技术领域）
+
+如果你不是程序员，以下是同样方法体系在其他领域的应用示例：
+
+### 案例A：7天入门日语五十音
+
+| 天数 | 学习方法 | 具体操作 |
+|-----|---------|---------|
+| Day 1 | 终局定向 + 思维导图 | 明确目标（能读写五十音），画出平假名/片假名的整体结构图 |
+| Day 2-3 | 费曼学习法 + 主动回忆 | 每学5个假名，用自己的方式解释发音规律，做成闪卡 |
+| Day 4 | 刻意练习 | 听写练习，专门针对容易混淆的假名（如シ和ツ） |
+| Day 5 | 间隔重复 | 用 Anki 复习前几天的内容，标记薄弱点 |
+| Day 6 | 实战项目 | 尝试阅读简单的日语招牌、歌词，不查字典能认出多少 |
+| Day 7 | 费曼学习法 | 教家人/朋友读几个常见的日语词汇 |
+
+### 案例B：7天学会理财基础
+
+| 天数 | 学习方法 | 具体操作 |
+|-----|---------|---------|
+| Day 1 | 终局定向 + 思维导图 | 明确目标（能看懂基金、了解资产配置），画出理财知识全景图 |
+| Day 2-3 | 费曼学习法 | 用大白话解释：什么是基金？什么是复利？股票和债券有啥区别？ |
+| Day 4 | 刻意练习 | 模拟选一只基金，分析它的持仓、费率、历史表现 |
+| Day 5 | 间隔重复 | 复习关键概念：年化收益率、夏普比率、资产配置比例 |
+| Day 6 | 实战项目 | 用少量资金（如100元）实际购买一只指数基金，体验完整流程 |
+| Day 7 | 费曼学习法 | 给家人讲解为什么要理财、怎么开始第一步 |
+
+### 案例C：7天准备驾照科目一
+
+| 天数 | 学习方法 | 具体操作 |
+|-----|---------|---------|
+| Day 1 | 终局定向 + 思维导图 | 明确目标（通过90分），画出题型分类：交通标志、交规、处罚、急救 |
+| Day 2-3 | 费曼学习法 | 每类题型用自己的话总结规律（如扣分规则的记忆口诀） |
+| Day 4 | 刻意练习 | 专做错题，分析为什么错，总结易混淆点 |
+| Day 5 | 间隔重复 | 复习前几天的错题，用 App 随机测试 |
+| Day 6 | 实战项目 | 模拟考试，计时完成，找出薄弱章节 |
+| Day 7 | 费曼学习法 | 给朋友讲解几个易错的交规知识点 |
+
+**核心启示**：无论学什么，方法体系是通用的——目标清晰、框架先行、理解为本、间隔巩固、实战检验。
+
+---
 
 ## 一句话总结
 
